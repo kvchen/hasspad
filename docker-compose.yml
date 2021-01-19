@@ -1,7 +1,13 @@
 services:
   hasspad:
-    build: .
+    container_name: hasspad
+    image: kvchen/hasspad:latest
+    restart: always
+    network_mode: host
+    privileged: true
     devices:
+      - "/dev/ttyAMA0:/dev/ttyAMA0"
       - "/dev/gpiomem"
     environment:
       - HASSPAD_ACCESS_TOKEN
+      - HASSPAD_URI

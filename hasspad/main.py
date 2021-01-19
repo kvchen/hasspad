@@ -6,17 +6,11 @@ from typing import List, Tuple
 import asyncio
 import click
 import json
-import websockets
+import keybow
 import logging
+import websockets
 
 import color
-
-try:
-    import keybow
-    keybow.setup(list(reversed(keybow.MINI)))
-except Exception:
-    keybow = None
-
 
 logging.basicConfig(
     level="INFO",
@@ -39,23 +33,17 @@ class Hasspad:
 
         self.light_states = [False for _ in light_ids]
 
-    async def listen_forever(self):
-        while True:
-            await self._listen()
-
-    async def _listen(self):
+    async def listen(self):
         try:
-            if keybow:
-                keybow.set_all(255, 0, 0)
-                keybow.show()
+            keybow.set_all(255, 0, 0)
+            keybow.show()
 
             async with websockets.connect(self.uri) as websocket:
                 await self._authenticate(websocket)
                 await self._initialize_states(websocket)
 
-                if keybow:
-                    handler = self._get_keypress_handler(websocket)
-                    keybow.on(handler=handler)
+                handler = self._get_keypress_handler(websocket)
+                keybow.on(handler=handler)
 
                 await self._subscribe(websocket)
 
@@ -79,9 +67,8 @@ class Hasspad:
         index = self.light_ids.index(entity_id)
         self.light_states[index] = light_rgb is not None
 
-        if keybow:
-            keybow.set_led(index, *[int(x) for x in light_rgb or (0, 0, 0)])
-            keybow.show()
+        keybow.set_led(index, *[int(x) for x in light_rgb or (0, 0, 0)])
+        keybow.show()
 
     async def _get_request_id(self):
         async with self.request_lock:
@@ -112,9 +99,8 @@ class Hasspad:
         logger.info("Authentication successful")
 
     async def _initialize_states(self, websocket: websockets.client.WebSocketClientProtocol):
-        if keybow:
-            keybow.set_all(0, 0, 0)
-            keybow.show()
+        keybow.set_all(0, 0, 0)
+        keybow.show()
 
         request_id = await self._get_request_id()
 
@@ -196,13 +182,14 @@ class Hasspad:
 @click.option('--uri', default="ws://homeassistant.local:8123/api/websocket")
 @click.option('--access-token')
 def main(uri: str, access_token: str) -> None:
+    keybow.setup(list(reversed(keybow.MINI)))
     hasspad = Hasspad(
         uri=uri,
         access_token=access_token,
-        light_ids=['light.desk_bias_light', 'light.desk_key_light']
+        light_ids=['light.desk_bias_light', 'light.desk_key_light']  # temporary, hardcoded
     )
 
-    asyncio.run(hasspad.listen_forever())
+    asyncio.run(hasspad.listen())
 
 
 if __name__ == "__main__":

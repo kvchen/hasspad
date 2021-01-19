@@ -1,15 +1,16 @@
-FROM arm32v6/python:3
+FROM balenalib/raspberry-pi-python:3.8-build
 
-RUN mkdir /hasspad
+ENV POETRY_HOME="/opt/poetry"
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
-COPY /hasspad /hasspad
-COPY pyproject.toml /hasspad
+RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 
-WORKDIR /hasspad
-ENV PYTHONPATH=${PYTHONPATH}:${PWD}
+COPY pyproject.toml ./
 
-RUN pip3 install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-dev
 
+COPY ./hasspad /hasspad
+
+WORKDIR /hasspad
 ENTRYPOINT ["python3", "/hasspad/main.py"]
