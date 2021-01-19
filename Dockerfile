@@ -1,4 +1,4 @@
-FROM python:latest
+FROM arm32v6/python:3-alpine
 
 RUN mkdir /hasspad
 
