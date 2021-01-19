@@ -1,0 +1,7 @@
+services:
+  hasspad:
+    build: .
+    devices:
+      - "/dev/gpiomem"
+    environment:
+      - HASSPAD_ACCESS_TOKEN
