@@ -4,6 +4,8 @@ A macropad interface for Home Assistant using the Pimoroni Keybow
 
 ## Installation
 
+### Using Docker (Recommended)
+
 First, provision the device. Flash `raspios` and ensure `ssh` and WiFi access are enabled.
 This can be done by writing a blank `ssh` file and a `wpa_supplicant.conf` file to the BOOT mount.
 
@@ -25,12 +27,8 @@ sudo apt-get install -y libffi-dev libssl-dev python3 python3-pip
 sudo pip3 install docker-compose
 ```
 
-The last thing you need to do is ensure environment variables are set that are used to authenticate with Home Assistant.
-You can also pass these in as flags or modify `docker-compose.yml`:
+The last thing you need to do is provision a config file. You can see the `example-config.yml` file at the root of this repository. Copy it and the `docker-compose.yml` file to the directory where you want to run the code, and run `docker-compose up`. You may need to modify `docker-compose.yml` with the correct bind path to your config file.
 
-```
-export HASSPAD_URI="ws://homeassistant.local:8123/api/websocket"
-export HASSPAD_ACCESS_TOKEN="abcd"
-```
+### Using pip
 
-Finally, just run `docker-compose up`.
+You can also just install the binary using `pip install hasspad`. To ensure it runs persistently across network issues and errors, you'll likely also want to write a systemd file.

@@ -26,7 +26,3 @@ logger = logging.getLogger(__file__)
 def main(config: TextIO) -> None:
     hasspad = Hasspad(HasspadConfig(**yaml.safe_load(config)))
     asyncio.run(hasspad.listen())
-
-
-if __name__ == "__main__":
-    main(auto_envvar_prefix="HASSPAD")
