@@ -1,0 +1,11 @@
+size: mini
+handlers:
+  - type: light
+    entity_id: light.a
+  - type: light
+    entity_id: light.b
+  - null
+
+api:
+  websocket_uri: "ws://homeassistant.local:8123/api/websocket"
+  access_token: "abcdef"

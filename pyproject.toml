@@ -1,21 +1,35 @@
 [tool.poetry]
 name = "hasspad"
-version = "0.1.0"
+version = "0.1.3"
 description = ""
 authors = ["Kevin Chen <keffcat@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/kvchen/hasspad/"
+keywords = [
+    "Home Assistant",
+    "keybow",
+]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 keybow = "^0.0.3"
 websockets = "^8.1"
 rich = "^9.8.2"
 click = "^7.1.2"
 "RPi.GPIO" = "^0.7.0"
 spidev = "^3.5"
+pydantic = "^1.7.3"
+PyYAML = "^5.4.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+pylint = "^2.7.0"
+black = {version = "^20.8b1", allow-prereleases = true}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+hasspad = "hasspad.main:main"
