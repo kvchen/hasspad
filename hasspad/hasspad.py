@@ -197,7 +197,8 @@ class Hasspad:
 
     def _set_key_color(self, idx: int, color: Color) -> None:
         logger.info(f"Setting key {idx} to {color}")
-        keybow.set_led(idx, *color.as_rgb_tuple(alpha=False))
+        r, g, b, *_ = color.as_rgb_tuple(alpha=False)
+        keybow.set_led(idx, r, g, b)
         keybow.show()
 
     def _handle_message(self, entity_id: str, message: Any) -> None:
@@ -205,7 +206,9 @@ class Hasspad:
         if handler_idx is None:
             return None
 
+        def set_color(color: Color):
+            assert handler_idx is not None
+            self._set_key_color(handler_idx, color)
+
         entity_handler = self.idx_to_handler[handler_idx]
-        entity_handler.on_message(
-            message, lambda color: self._set_key_color(handler_idx, color)
-        )
+        entity_handler.on_message(message, set_color)
